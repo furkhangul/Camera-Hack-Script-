@@ -3,3 +3,8 @@ scripti kullanacağımız kendi bilgisayaımıza veya başka bir şirketin hosti
 kod dizininde disable bölümünde saniye ayarı yaparak sitenin kaç saniyede bir fotoğraf çekebildiğini ayarlayabilirsiniz. Süre aralığının fazla olması siteyi hızlı ve daha güvenli hale getirir.
 (Siteye giren kullanıcılardan izin istenmeden fotoğraf çekilmez )
 Saygılarımla :) 
+
+
+Update: 
+
+Kayıt klasörü silindi. Yeni güncelleme ile artık otomatik bir şekilde bu klasör zaten eklenecek 
